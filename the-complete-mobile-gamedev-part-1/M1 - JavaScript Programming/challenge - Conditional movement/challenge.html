@@ -1,0 +1,281 @@
+<html>
+<head>
+  <title></title>
+  <style>
+    canvas {
+        border: 1px solid black;
+        width: 100%;
+        }
+  </style>
+</head>
+<body>
+  <h1>Challenge - Conditional movement</h1>
+<!--
+    <div>
+  <canvas id="mycanvas" width="300" height="300" ></canvas>
+    </div>
+-->
+    <div>
+    <canvas id="mycanvas2" width="640" height="300" ></canvas>
+    </div>
+        <script>
+            
+            window.addEventListener('load', function () {
+
+            var gameLive = true;
+            var GAME_WIDTH = 640;
+            var GAME_HEIGHT = 360;
+            
+            var enemies = [
+                {
+                x: 100,
+                y: 100,
+                speedY: 1,
+                w: 40,
+                h: 40
+            },
+            {
+                x: 260,
+                y: 100,
+                speedY: 2,
+                w: 40,
+                h: 40 
+            },
+                 {
+                x: 380,
+                y: 100,
+                speedY: 3,
+                w: 40,
+                h: 40
+              },
+              {
+                x: 450,
+                y: 100,
+                speedY: 7,
+                w: 40,
+                h: 40
+              }
+            ];
+                
+            var player = {
+                x: 10,
+                y: 100,
+                speedX: 2,
+                w: 40,
+                h: 40,
+                isMoving: false
+            };
+            var goal = {
+                x:580,
+                y: 100,
+                w:40,
+                h:40
+            };
+            
+            var movePlayer = function() {
+                player.isMoving = true;
+            };
+                
+            var stopPlayer = function() {
+                player.isMoving = false;
+            }
+                
+            var canvas2 = document.getElementById("mycanvas2");
+            var ctx2 = canvas2.getContext("2d");
+                
+            canvas2.addEventListener("mousedown", movePlayer);
+            canvas2.addEventListener("mouseup", stopPlayer);
+            canvas2.addEventListener("touchstart", movePlayer);
+            canvas2.addEventListener("touchend", stopPlayer);
+            
+                
+            var update2 = function() {
+                
+                if(checkCollision(player, goal)){
+                     gameLive = false;
+                        alert('You\'ve won dawg! I bet yo mama be proud');
+                        window.location = "";
+                }
+                
+                if(player.isMoving) {
+                    player.x += player.speedX;
+                    }
+    //                var j = 0;
+                    var n = enemies.length;
+                    enemies.forEach(function(element, index) {
+                    element.y += element.speedY;
+
+                        //check boarders
+                    if(element.y <= 10) {
+                            element.y = 10;
+                            element.speedY *= -1;
+                         }
+                        else if (element.y >= GAME_HEIGHT ) {
+                            element.y = GAME_HEIGHT -50;
+                            element.speedY *= -1;
+                        }
+                    
+                    });
+                }
+            
+            //show the game on the screen
+            var draw2 = function() {
+            //clear the canvas
+            ctx2.clearRect(0,0,GAME_WIDTH,GAME_HEIGHT);
+            //draw player
+            ctx2.fillStyle = "#00FF00";
+            ctx2.fillRect(player.x, player.y, player.w, player.h);
+            ctx2.fillStyle = "#3333FF";
+
+              //draw each enemy
+              var n = enemies.length;
+                enemies.forEach(function(element, index) {  
+                
+                    if(checkCollision(player, element)) {
+                        gameLive = false;
+                        alert('Game Over');
+                        window.location = "";
+                    }
+                    
+                ctx2.fillRect(element.x, element.y, element.w, element.h);
+                });
+                
+                //draw goal
+                ctx2.fillStyle = "#11FF11";
+                ctx2.fillRect(goal.x,goal.y, goal.h, goal.w);
+                
+            };
+
+            //gets executed multiple times per second
+            var step = function() {
+
+              update2();
+              draw2();
+                
+              if(gameLive){
+                  window.requestAnimationFrame(step);
+              }
+              
+            };
+            
+                var checkCollision = function (rect1, rect2) {
+                    var closeOnWidth = Math.abs(rect1.x - rect2.x) <= Math.max(rect1.w, rect2.w);
+                    var closeOnHeight = Math.abs(rect1.y - rect2.y) <= Math.max(rect1.h, rect2.h);
+                    
+                  return closeOnHeight && closeOnWidth;
+                };
+            //initial kick
+            step();
+         
+            });
+            
+            
+//
+//    //initial position
+//    var x = 10;
+//    var y = 10;
+//
+//    //rectangle dimensions
+//    var w = 20;
+//    var h = 30;
+//
+//    //speed at which it moves
+//    var speed = 2;
+//    var speedY = 0;
+//
+//    //grab the canvas and context
+//    var canvas = document.getElementById("mycanvas");
+//    var ctx = canvas.getContext("2d");
+//
+//    //color zones
+//    var blueZone, greenZone;
+//
+//    //update the rectangle position
+//
+//    /*
+//
+//    ///////////////
+//
+//    CHALLENGE: Conditional movement
+//
+//    Make the following happen (inside of update):
+//
+//    1-the rectange only has a speed on X. Give it also a speed on Y and update it's position on Y
+//
+//    2-if the rectangle is located on x between 100 and 150, give it a speed on Y of 1, otherwise
+//    the speed in Y is 0 (the speed on X remains 2 at all times)
+//
+//    ///////////////////////////////////
+//    */
+//
+//    var update = function() {
+//
+//      var crossedRightLimit = x >= 270;
+//      var crossedLeftLimit = x <= 10;
+//      var betweeon100and150 = x >= 100 && x <= 150;
+//
+//      //check if x surpases a certain value
+//      if(crossedRightLimit) {
+//
+//        //if so, push back and reverse movement
+//        x = 270;
+//        speed = -speed;
+//      }
+//
+//      //check if x is getting too close to the left border
+//      else if(crossedLeftLimit) {
+//
+//        //if so, push back and reverse movement
+//        x = 10;
+//        speed = -speed;
+//      }
+//    
+//     if(betweeon100and150){
+//         speedY = 1;
+//         }
+//        else {
+//            speedY = 0;
+//        }
+//
+//
+//      x = x + speed;
+//      y = y + speedY;
+//
+//      //define color
+//      blueZone = x > 0 && x < 100;
+//      greenZone = !blueZone && x < 200;
+//    };
+//
+//    //show it on the screen
+//    var draw = function() {
+//      ctx.clearRect(0,0,500,300);
+//
+//      if(blueZone) {
+//        ctx.fillStyle = "#3333FF";
+//      }
+//      else if(greenZone) {
+//        ctx.fillStyle = "#00CC66";
+//      }
+//      else {
+//        ctx.fillStyle = "rgb(200, 0, 100)";
+//      }
+//
+//      
+//      ctx.fillRect(x, y, w, h);
+//    };
+//
+//    //gets executed multiple times per second
+//    var step = function() {
+//
+//      update();
+//      draw();
+//
+//      window.requestAnimationFrame(step);
+//    };
+//
+//    //initial kick
+//    step();
+
+  </script>
+</body>
+</html>
