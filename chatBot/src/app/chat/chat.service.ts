@@ -12,4 +12,9 @@ export class ChatService {
   readonly client = new ApiAiClient({accessToken: this.token});
 
   constructor() { }
+
+  talk() {
+    this.client.textRequest('who are you')
+    .then(res => console.log(res));
+  }
 }
