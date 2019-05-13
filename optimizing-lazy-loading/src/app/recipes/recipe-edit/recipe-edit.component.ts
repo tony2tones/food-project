@@ -60,6 +60,10 @@ export class RecipeEditComponent implements OnInit {
     (<FormArray>this.recipeForm.get('ingredients')).removeAt(index);
   }
 
+  getControls() {
+    return (<FormArray>this.recipeForm.get('ingredients')).controls;
+  }
+
   onCancel() {
     this.router.navigate(['../'], {relativeTo: this.route});
   }
